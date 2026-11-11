@@ -1,3 +1,4 @@
+import path from "node:path";
 import { defineConfig } from "@rsbuild/core";
 import { pluginSass } from "@rsbuild/plugin-sass";
 import * as sass from "sass";
@@ -133,7 +134,11 @@ export default defineConfig({
                 },
             });
 
-            const elmLoaders = [];
+            // Loaders run last to first: the mount loader gets the code that
+            // `elm-webpack-loader` compiles.
+            const elmLoaders = [
+                { loader: path.resolve(import.meta.dirname, "scripts/elm-mount-loader.cjs") },
+            ];
             if (!isProd) {
                 elmLoaders.push({ loader: "elm-reloader" });
             }
